@@ -1,0 +1,135 @@
+{
+  "kits" : [
+    {
+      "kitId": 1,
+      "name": "Trance",
+      "bpm": 134,
+      "folder": "assets/kits/trance/",
+      "sampleDuration": "6.0.0"
+    },
+    {
+      "kitId": 2,
+      "name":"Dub Step",
+      "bpm": 145,
+      "folder": "assets/kits/dub_step/",
+      "sampleDuration": "6.0.0"
+    },
+    {
+      "kitId": 3,
+      "name":"Synth Pop",
+      "bpm": 100,
+      "folder": "assets/kits/pop/",
+      "sampleDuration": "6.0.0"
+    },
+    {
+      "kitId": 4,
+      "name":"Hip Hop",
+      "bpm": 130,
+      "folder": "assets/kits/hiphop/",
+      "sampleDuration": "6.0.0"
+    },
+    {
+      "kitId": 5,
+      "name":"Rock",
+      "bpm": 95,
+      "folder": "assets/kits/rock/",
+      "sampleDuration": "6.0.0"
+    }
+  ],
+  "sounds":[
+    {
+      "type" : 0,
+      "file": "beat_1"
+    },
+    {
+      "type" : 0,
+      "file": "beat_2"
+    },
+    {
+      "type" : 0,
+      "file": "beat_3"
+    },
+    {
+      "type" : 0,
+      "file": "beat_4"
+    },
+    {
+      "type" : 0,
+      "file": "beat_5"
+    },
+    {
+      "type" : 0,
+      "file": "beat_6"
+    },
+    {
+      "type" : 1,
+      "file": "bass_1"
+    },
+    {
+      "type" : 1,
+      "file": "bass_2"
+    },
+    {
+      "type" : 1,
+      "file": "bass_3"
+    },
+    {
+      "type" : 1,
+      "file": "bass_4"
+    },
+    {
+      "type" : 1,
+      "file": "bass_5"
+    },
+    {
+      "type" : 1,
+      "file": "bass_6"
+    }, {
+      "type" : 2,
+      "file": "synth_1"
+    },
+    {
+      "type" : 2,
+      "file": "synth_2"
+    },
+    {
+      "type" : 2,
+      "file": "synth_3"
+    },
+    {
+      "type" : 2,
+      "file": "synth_4"
+    },
+    {
+      "type" : 2,
+      "file": "synth_5"
+    },
+    {
+      "type" : 2,
+      "file": "synth_6"
+    }, {
+      "type" : 3,
+      "file": "fx_1"
+    },
+    {
+      "type" : 3,
+      "file": "fx_2"
+    },
+    {
+      "type" : 3,
+      "file": "fx_3"
+    },
+    {
+      "type" : 3,
+      "file": "fx_4"
+    },
+    {
+      "type" : 3,
+      "file": "fx_5"
+    },
+    {
+      "type" : 3,
+      "file": "fx_6"
+    }
+  ]
+}
