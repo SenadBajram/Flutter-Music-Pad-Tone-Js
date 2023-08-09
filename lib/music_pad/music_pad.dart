@@ -500,7 +500,6 @@ class _MusicPadState extends State<MusicPad>  with SingleTickerProviderStateMixi
                             )
                         ),
                         onChange: (double value) {
-                          //print(value);
                           js.context.callMethod(fxPath, ["delay", roundDouble(value/100,2)]);
                         }),
                   ),
@@ -520,7 +519,6 @@ class _MusicPadState extends State<MusicPad>  with SingleTickerProviderStateMixi
                             )
                         ),
                         onChange: (double value) {
-                          //print(value);
                           js.context.callMethod(fxPath, ["reverb", roundDouble(value,2)]);
                         }),
                   )
@@ -694,7 +692,6 @@ class _MusicPadState extends State<MusicPad>  with SingleTickerProviderStateMixi
 
       },
       onHover: (PointerEvent details) {
-        //print("Hover");
         runJSCommand("audioFilterFX", [details.position.dx, details.position.dy, 400, 400]);
       },
       onExit: (PointerEvent details) {
@@ -883,14 +880,10 @@ class _MusicPadState extends State<MusicPad>  with SingleTickerProviderStateMixi
                                               Clef.Bass,
                                             ], extended: true),
                                             onNotePositionTapped: (position) {
-                                               // print(position.pitch);
-                                               // print(position.note.name);
                                                lastPianoNoteTriggered = position.note.name+position.octave.toString();
                                                runJSCommand("triggerSamplersNote", [position.note.name+position.octave.toString()]);
                                             },
                                             onNotePositionTappedUp: (position) {
-                                              // print("UP");
-                                              // print(position.note.name);
                                               runJSCommand("triggerSamplersNoteStop", [position.note.name+position.octave.toString()]);
                                             },
                                           ),
