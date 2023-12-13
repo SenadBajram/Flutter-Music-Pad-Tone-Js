@@ -43,8 +43,8 @@ class _MusicPadState extends State<MusicPad>  with SingleTickerProviderStateMixi
   List<String> samples4Queue = [];
   List<String> samples5Queue = [];
 
-  var displayWidth = 0.0;
-  var displayHeight = 0.0;
+  double displayWidth = 0.0;
+  double displayHeight = 0.0;
 
   Timer? beatTimer;
   bool beatTriggered = false;
@@ -74,6 +74,49 @@ class _MusicPadState extends State<MusicPad>  with SingleTickerProviderStateMixi
 
   GlobalKey bottomKickKey = GlobalKey();
   GlobalKey mainWrapperKey = GlobalKey();
+
+  @override
+  initState() {
+    beatTimer =
+        Timer.periodic(const Duration(milliseconds: 1), (timer) {
+          setState(() {
+            beatTriggered = true;
+            previousBPMPosition = currentBPMPosition;
+            try {
+              currentBPMPosition = int.parse(state['beat']);
+              beatBar = int.parse(state['beatBar']);
+            } catch (e) {
+              currentBPMPosition = 0;
+            }
+            //print("pBMP $previousBPMPosition currentBPM $currentBPMPosition beatBar $beatBar");
+            if(previousBPMPosition==3 && currentBPMPosition==0) {
+              checkQueue(samples0Queue, samples0Playing, "playDrumSample");
+              checkQueue(samples1Queue, samples1Playing, "playBassSample");
+              checkQueue(samples2Queue, samples2Playing, "playSynthSample");
+            }
+          });
+        });
+
+    html.window.onKeyPress.listen((html.KeyboardEvent e) {
+      if(!keyTriggered) {
+        keyTriggered = true;
+        playSampleWithKeyboard(e.key ?? "");
+      }
+    });
+
+    html.window.onKeyUp.listen((html.KeyboardEvent e) {
+      keyTriggered = false;
+      runJSCommand("triggerSamplersNoteStop", [lastPianoNoteTriggered]);
+    });
+
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        kitSelected = false;
+      });
+    });
+
+    super.initState();
+  }
 
   runJSCommand(String command, List<Object?> args) {
     js.context.callMethod(command, args);
@@ -146,51 +189,7 @@ class _MusicPadState extends State<MusicPad>  with SingleTickerProviderStateMixi
     toPlayQueue.clear();
   }
 
-  @override
-  initState() {
-    beatTimer =
-        Timer.periodic(const Duration(milliseconds: 1), (timer) {
-          setState(() {
-            beatTriggered = true;
-            previousBPMPosition = currentBPMPosition;
-            try {
-              currentBPMPosition = int.parse(state['beat']);
-              beatBar = int.parse(state['beatBar']);
-            } catch (e) {
-              currentBPMPosition = 0;
-            }
-            //print("pBMP $previousBPMPosition currentBPM $currentBPMPosition beatBar $beatBar");
-            if(previousBPMPosition==3 && currentBPMPosition==0) {
-              checkQueue(samples0Queue, samples0Playing, "playDrumSample");
-              checkQueue(samples1Queue, samples1Playing, "playBassSample");
-              checkQueue(samples2Queue, samples2Playing, "playSynthSample");
-            }
-          });
-        });
-
-    html.window.onKeyPress.listen((html.KeyboardEvent e) {
-      if(!keyTriggered) {
-        keyTriggered = true;
-        playSampleWithKeyboard(e.key ?? "");
-      }
-    });
-
-    html.window.onKeyUp.listen((html.KeyboardEvent e) {
-      keyTriggered = false;
-      runJSCommand("triggerSamplersNoteStop", [lastPianoNoteTriggered]);
-    });
-
-    Future.delayed(const Duration(seconds: 1), () {
-      setState(() {
-        kitSelected = false;
-      });
-    });
-
-    super.initState();
-  }
-
   playSampleWithKeyboard(String charCode) {
-
     switch(charCode) {
       case "a": lastPianoNoteTriggered = "C3"; break;
       case "s": lastPianoNoteTriggered = "D3"; break;
@@ -244,7 +243,7 @@ class _MusicPadState extends State<MusicPad>  with SingleTickerProviderStateMixi
           ?.findRenderObject() as RenderBox;
       Offset position = box.localToGlobal(
           Offset.zero); //this is global position
-      double y = position.dy;
+      //double y = position.dy;
       return position;
     } catch (e) {
       return const Offset(0,0);
@@ -253,6 +252,11 @@ class _MusicPadState extends State<MusicPad>  with SingleTickerProviderStateMixi
 
   bool isNumeric(String s) {
     return double.tryParse(s) != null;
+  }
+
+  double roundDouble(double value, int places){
+    double mod = pow(10.0, places).toDouble();
+    return ((value * mod).round().toDouble() / mod);
   }
 
   Widget getAudioMeter(js.JsArray<dynamic> array) {
@@ -273,12 +277,12 @@ class _MusicPadState extends State<MusicPad>  with SingleTickerProviderStateMixi
           width: 50,
           height: 565,
           decoration: BoxDecoration(
-              color: Colors.black,
+            color: Colors.black,
             borderRadius: const BorderRadius.all(Radius.circular(10)),
-              border: Border.all(
-                  color: Colors.deepPurple.shade900.withOpacity(.5),
-                  width: 1
-              ),
+            border: Border.all(
+                color: Colors.deepPurple.shade900.withOpacity(.5),
+                width: 1
+            ),
           ),
           child: Padding(
             padding: const EdgeInsets.all(2.0),
@@ -397,18 +401,13 @@ class _MusicPadState extends State<MusicPad>  with SingleTickerProviderStateMixi
               ),
             ),
             SizedBox(
-                width: 50,
-                child: Text("${beatBar+1} / 4",  style: GoogleFonts.darkerGrotesque(textStyle: const TextStyle(fontSize: 20), color: Colors.amber)),
+              width: 50,
+              child: Text("${beatBar+1} / 4",  style: GoogleFonts.darkerGrotesque(textStyle: const TextStyle(fontSize: 20), color: Colors.amber)),
             )
           ],
         ),
       ),
     );
-  }
-
-  double roundDouble(double value, int places){
-    double mod = pow(10.0, places).toDouble();
-    return ((value * mod).round().toDouble() / mod);
   }
 
   Widget getPads(String padTitle, List<String> samplesQueue, List<String> playingQueue, String stopFunctionId, Color padColor, fxPath, double initVolumeValue, {bool oneShot = false}) {
@@ -524,7 +523,6 @@ class _MusicPadState extends State<MusicPad>  with SingleTickerProviderStateMixi
                   )
                 ],
               )
-
             ],
           ),
         ),
@@ -730,7 +728,7 @@ class _MusicPadState extends State<MusicPad>  with SingleTickerProviderStateMixi
 
   double getBlurAmountFromMeter(js.JsArray<dynamic> array) {
     double leftChannel = array[0];
-    double rightChannel = array[1];
+    //double rightChannel = array[1];
     if(leftChannel>-10) {
       return 15;
     } else if(leftChannel>-12) {
@@ -775,7 +773,6 @@ class _MusicPadState extends State<MusicPad>  with SingleTickerProviderStateMixi
 
   @override
   Widget build(BuildContext context) {
-
     if(displayWidth==0) {
       displayWidth = MediaQuery.of(context).size.width;
     }
