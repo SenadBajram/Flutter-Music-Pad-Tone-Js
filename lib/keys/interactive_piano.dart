@@ -454,7 +454,7 @@ class _MaybeScrollbar extends StatelessWidget {
           thumbColor: Colors.grey.shade600,
           radius: Radius.circular(16),
           thickness: 16,
-          isAlwaysShown: true,
+          //isAlwaysShown: true,
           controller: scrollController,
           child: Container(
               color: Colors.black,
